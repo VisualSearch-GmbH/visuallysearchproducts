@@ -23,11 +23,11 @@ class VisuallySearchProductsGetProductsModuleFrontController extends VisuallySea
         parent::initContent();
 
         if (!$this->checkAuthorization()) {
-            die("Authorization failed");
+            die(json_encode(["message" => "Authorization failed", "code" => 500]));
         }
 
         if (!$this->isLiveMode()) {
-            die("Not in live mode");
+            die(json_encode(["message" => "Not in live mode", "code" => 500]));
         }
 
         // search for products
@@ -71,38 +71,9 @@ class VisuallySearchProductsGetProductsModuleFrontController extends VisuallySea
                 }
             }
         } else {
-            die("No products found");
+            die(json_encode(["message" => "No products", "code" => 500]));
         }
 
-        $data = ["products" => $products_list];
-        //echo json_encode($data);
-
-        //
-        // Send curl request
-        //
-        // Create a connection
-        $url = 'https://api.visualsearch.wien/similar_compute';
-        $ch = curl_init($url);
-
-        // Form data string
-        $postString = json_encode($data);
-        // $postString = http_build_query($data);
-
-        // hosts
-        $systemHosts = Context::getContext()->shop->getBaseURL(true);
-
-        // Setting our options
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $postString);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json',
-            'Vis-API-KEY:'.$this->getApiKey(),
-            'Vis-SYSTEM-HOSTS:'.$systemHosts,
-            'Vis-SYSTEM-TYPE:prestashop'));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        // Get the response
-        $response = curl_exec($ch);
-        curl_close($ch);
-        $response = json_decode($response);
-        die($response->{'message'});
+        die(json_encode(["message" => "success", "products" => $products_list, "code" => 200]));
     }
 }
