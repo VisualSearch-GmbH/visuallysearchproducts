@@ -31,6 +31,7 @@ class VisuallySearchProducts extends Module
         $this->version = '1.0.0';
         $this->author = 'VisualSearch';
         $this->need_instance = 0;
+        $this->controllers = array('VisualSearch');
 
         /**
          * Set $this->bootstrap to true if your module is compliant with bootstrap (PrestaShop 1.6)
@@ -64,13 +65,15 @@ class VisuallySearchProducts extends Module
             VALUES (\''. $key .'\')
         ');
 
-        $this->notification($host, $key, 'prestashop;install');
+        $this->notify($host, $key, 'prestashop;install');
 
-        return parent::install() &&
-            $this->registerHook('apiKeyVerify') &&
-            $this->registerHook('getProducts') &&
-            $this->registerHook('statusVersion') &&
-            (!_VSP_PS16_ || _VSP_PS16_ && $this->registerHook('displayProductPriceBlock'));
+        return parent::install() && $this->registerHook(array(
+            'apiKeyVerify',
+            'getProducts',
+            'statusVersion',
+            'displayHeader',
+            'displayTop',
+        ));
     }
 
     /**
@@ -86,21 +89,22 @@ class VisuallySearchProducts extends Module
 
         $host = Context::getContext()->shop->getBaseURL(true);
 
-        $this->notification($host, '', 'prestashop;uninstall');
+        $this->notify($host, '', 'prestashop;uninstall');
 
         return parent::uninstall();
     }
 
     /**
      * Send notifaction about installation
+     *
      * @param $hosts
      * @param $keys
      * @param $type
      */
-    protected function notification($hosts, $key, $type)
+    protected function notify($hosts, $key, $type)
     {
-        $url = 'https://api.visualsearch.wien/installation_notify';
-        $ch = curl_init($url);
+        $ch = curl_init('https://api.visualsearch.wien/installation_notify');
+
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             'Vis-API-KEY: marketing',
@@ -164,6 +168,14 @@ class VisuallySearchProducts extends Module
     }
 
     /**
+     * @return Controller|AdminController|FrontController
+     */
+    protected function getController()
+    {
+        return $this->context->controller;
+    }
+
+    /**
      * Create the form that will be displayed in the configuration of your module.
      */
     protected function renderForm()
@@ -184,7 +196,7 @@ class VisuallySearchProducts extends Module
 
         $helper->tpl_vars = array(
             'fields_value' => $this->getConfigFormValues(), /* Add values for your inputs */
-            'languages' => $this->context->controller->getLanguages(),
+            'languages' => $this->getController()->getLanguages(),
             'id_language' => $this->context->language->id,
         );
 
@@ -286,7 +298,7 @@ class VisuallySearchProducts extends Module
         $helper->token = Tools::getAdminTokenLite('AdminModules');
         $helper->tpl_vars = array(
             'fields_value' => $this->getApiCredentialsFormFieldsValue(),
-            'languages' => $this->context->controller->getLanguages(),
+            'languages' => $this->getController()->getLanguages(),
             'id_language' => $this->context->language->id,
         );
 
@@ -464,37 +476,14 @@ class VisuallySearchProducts extends Module
     }
 
     /**
-     * @param mixed $params
-     *
-     * @return mixed
-     */
-    public function hookDisplayProductPriceBlock($params)
-    {
-        if ((Dispatcher::getInstance()->getController() !== 'product') ||
-            !isset($params['type']) ||
-            ($params['type'] !== 'after_price') ||
-            !isset($params['product']) ||
-            !is_array($params['product'])) {
-            return;
-        }
-
-        ($template = $this->context->smarty->createTemplate(
-            $this->local_path . 'views/templates/hook/product-price-block.tpl'
-        ))->assign('product', $params['product']);
-
-        return $template->fetch();
-    }
-
-    /**
      * Api key verify endpoint
      */
     public function hookApiKeyVerifyRoutes()
     {
         return array(
-
             'module-'.$this->name.'-api_key_verify' => array(
                 'controller' => 'ApiKeyVerify',
-                'rule' => 'ApiKeyVerify',
+                'rule' => $this->name.'/ApiKeyVerify',
                 'keywords' => array(),
                 'params' => array(
                     'fc' => 'module',
@@ -510,10 +499,9 @@ class VisuallySearchProducts extends Module
     public function hookGetProductsRoutes()
     {
         return array(
-
             'module-'.$this->name.'-get_products' => array(
                 'controller' => 'GetProducts',
-                'rule' => 'GetProducts',
+                'rule' => $this->name.'/GetProducts',
                 'keywords' => array(),
                 'params' => array(
                     'fc' => 'module',
@@ -529,10 +517,9 @@ class VisuallySearchProducts extends Module
     public function hookStatusVersionRoutes()
     {
         return array(
-
             'module-'.$this->name.'-status_version' => array(
                 'controller' => 'StatusVersion',
-                'rule' => 'StatusVersion',
+                'rule' => $this->name.'/StatusVersion',
                 'keywords' => array(),
                 'params' => array(
                     'fc' => 'module',
@@ -543,7 +530,94 @@ class VisuallySearchProducts extends Module
     }
 
     /**
+     * @param mixed $params
+     */
+    public function hookDisplayHeader($params)
+    {
+        if (_VSP_PS16_) {
+            $this->getController()->addCss($this->_path . 'views/css/front/search-link-1.6.css');
+        } else {
+            $this->getController()->registerStylesheet(
+                'modules-' . $this->name . '-search-link',
+                'modules/' . $this->name . '/views/css/front/search-link.css',
+                array(
+                    'media' => 'all',
+                    'priority' => 150,
+                )
+            );
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLiveMode()
+    {
+        return (bool)Configuration::get(
+            'VISUALLY_SEARCH_PRODUCTS_LIVE_MODE',
+            null,
+            null,
+            $this->context->shop->id
+        );
+    }
+
+    /**
+     * @return string
+     */
+    public function getApiKey()
+    {
+        return (string)Configuration::get(
+            'VISUALLY_SEARCH_PRODUCTS_API_KEY',
+            null,
+            null,
+            $this->context->shop->id
+        );
+    }
+
+    /**
+     * @param mixed $params
+     */
+    public function hookDisplayTop($params)
+    {
+        if ($this->getApiKey() && $this->isLiveMode()) {
+            $this->context->smarty->assign(array(
+                'visual_search_link' => array(
+                    'href' => $this->context->link->getModuleLink($this->name, 'VisualSearch'),
+                    'title' => $this->l('Find products using picture'),
+                )
+            ));
+    
+            return $this->display(__FILE__, '/views/templates/hook/search-link' . (_VSP_PS16_ ? '-1.6' : '') . '.tpl');
+        }
+    }
+
+    /**
+     * @param mixed $params
+     */
+    public function hookDisplayNav($params)
+    {
+        return $this->hookDisplayTop($params);
+    }
+
+    /**
+     * @param mixed $params
+     */
+    public function hookisplayNav1($params)
+    {
+        return $this->hookDisplayTop($params);
+    }
+
+    /**
+     * @param mixed $params
+     */
+    public function hookDisplayNav2($params)
+    {
+        return $this->hookDisplayTop($params);
+    }
+
+    /**
      * Return Uuid identifier
+     *
      * @return string Uuid
      */
     private function uuid(): string
@@ -561,4 +635,20 @@ class VisuallySearchProducts extends Module
         );
     }
 
+    /**
+     * @param array $products
+     *
+     * @return string
+     */
+    public function renderProductsList(array $products)
+    {
+        $this->context->smarty->assign(array(
+            'products' => $products
+        ));
+
+        return $this->display(
+            __FILE__,
+            '/views/templates/front/products-list' . (_VSP_PS16_ ? '-1.6' : '') . '.tpl'
+        );
+    }
 }

@@ -1,0 +1,111 @@
+/**
+ * (c) VisualSearch GmbH <office@visualsearch.at>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with the source code.
+ */
+.visual-search {
+    padding: 0 30px 50px;
+}
+.visual-search--title {
+    margin: 0 0 20px;
+    color: #000;
+    font-family: -apple-system, blinkmacsystemfont, Segoe UI, helvetica, arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 38px;
+    text-align: center;
+}
+.visual-search--info {
+    margin-bottom: 50px;
+    font-family: -apple-system, blinkmacsystemfont, Segoe UI, helvetica, arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 24px;
+    text-align: center;
+}
+.visual-search--products-list {
+    width: 798px;
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 30px 0 0;
+}
+.visual-search--products-list-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    color: #000;
+    font-family: -apple-system, blinkmacsystemfont, Segoe UI, helvetica, arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+    font-size: 25px;
+    font-weight: 400;
+    line-height: 31px;
+}
+.visual-search--choose-another-photo {
+    color: #2275d7e6;
+    font-family: -apple-system, blinkmacsystemfont, Segoe UI, helvetica, arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 22px;
+    text-decoration: none;
+    cursor: pointer;
+}
+.visual-search--choose-another-photo:hover {
+    color: #2275d7e6;
+    text-decoration: underline;
+}
+.visual-search--products-list-body {
+    margin-bottom: 50px;
+}
+.visual-search--file-uploader {
+    display: flex;
+    justify-content: center;
+}
+.visual-search--drag-drop-area {
+    max-width: 100%;
+}
+.visual-search--not-found {
+    padding: 50px 0;
+}
+.visual-search--not-found-message {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, blinkmacsystemfont, Segoe UI, helvetica, arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 26px;
+    text-align: center;
+}
+@media (max-width: 767px) {
+    .visual-search {
+        padding: 0 0 30px;
+    }
+}
+@media (max-width: 575px) {
+    .visual-search--title {
+        font-size: 30px;
+        line-height: 36px;
+    }
+    .visual-search--info {
+        font-size: 16px;
+        line-height: 22px;
+    }
+    .visual-search--products-list {
+        padding: 0;
+    }
+    .visual-search--products-list-head {
+        flex-direction: column-reverse;
+        font-size: 20px;
+        line-height: 26px;
+    }
+    .visual-search--products-list-head > * {
+        width: 100%;
+    }
+    .visual-search--choose-another-photo {
+        margin-bottom: 30px;
+        text-align: center;
+    }
+    .visual-search--not-found-message {
+        font-size: 14px;
+        line-height: 20px;
+    }
+}

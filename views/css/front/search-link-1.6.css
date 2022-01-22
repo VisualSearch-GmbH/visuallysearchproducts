@@ -3,3 +3,11 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with the source code.
  */
+.visual-search-link {
+    float: left;
+    padding: 15px;
+}
+.visual-search-link a {
+    color: #333;
+    font-size: 23px;
+}

@@ -1,0 +1,17 @@
+/**
+ * (c) VisualSearch GmbH <office@visualsearch.at>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with the source code.
+ */
+.visual-search-link {
+    float: right;
+    margin-top: .625rem;
+    margin-right: .9375rem;
+}
+@media (max-width: 767px) {
+    .visual-search-link {
+        width: 100%;
+        margin-right: 0;
+        text-align: center;
+    }
+}

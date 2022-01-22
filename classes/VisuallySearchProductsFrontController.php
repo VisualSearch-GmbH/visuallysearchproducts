@@ -65,6 +65,8 @@ class VisuallySearchProductsFrontController extends ModuleFrontController
 
     /**
      * @return bool
+     *
+     * @deprecated
      */
     protected function isLiveMode()
     {
@@ -78,6 +80,8 @@ class VisuallySearchProductsFrontController extends ModuleFrontController
 
     /**
      * @return string
+     *
+     * @deprecated
      */
     protected function getApiKey()
     {
