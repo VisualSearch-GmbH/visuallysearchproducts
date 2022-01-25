@@ -14,7 +14,7 @@
         <div id="drag_drop_area" class="visual-search--drag-drop-area" data-ajax_url="{$visual_search.ajax_url}" data-locale="{$visual_search.locale}"></div>
     </div>
 </div>
-{addJsDefL name=min_item}{l s='Please select at least one product' js=1}{/addJsDefL}
-{addJsDefL name=max_item}{l s='You cannot add more than %d product(s) to the product comparison' sprintf=$comparator_max_item js=1}{/addJsDefL}
+{addJsDefL name=min_item}{l s='Please select at least one product' mod='visuallysearchproducts' js=1}{/addJsDefL}
+{addJsDefL name=max_item}{l s='You cannot add more than %d product(s) to the product comparison' sprintf=$comparator_max_item mod='visuallysearchproducts' js=1}{/addJsDefL}
 {addJsDef comparator_max_item=$comparator_max_item}
 {addJsDef comparedProductsIds=$compared_products}

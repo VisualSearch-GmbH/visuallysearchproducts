@@ -25,7 +25,7 @@ class VisuallySearchProductsVisualSearchModuleFrontController extends VisuallySe
         $locale = _VSP_PS16_ ? $this->context->language->language_code : $this->context->language->locale;
 
         if (count($data = explode('-', $locale)) === 2) {
-            $locale = implode('_', array(strtolower($data[0]), strtoupper($data[1])));
+            $locale = implode('_', array(Tools::strtolower($data[0]), Tools::strtoupper($data[1])));
         }
         
         return $locale;
@@ -169,7 +169,7 @@ class VisuallySearchProductsVisualSearchModuleFrontController extends VisuallySe
             );
 
             $postFields = json_encode(array(
-                'image_data' => base64_encode(file_get_contents($filename))
+                'image_data' => base64_encode(Tools::file_get_contents($filename))
             ));
             
             curl_setopt($handle, CURLOPT_URL, 'https://api.visualsearch.wien/search_single_demo');
@@ -203,7 +203,7 @@ class VisuallySearchProductsVisualSearchModuleFrontController extends VisuallySe
         $products = array();
 
         if (_VSP_PS16_) {
-            require_once dirname(__DIR__) . '/../classes/Product16.php';
+            require_once dirname(__FILE__) . '/../classes/Product16.php';
 
             foreach ($productsIds as $productId) {
                 $product = (new VisuallySearchProducts\PrestaShop16\Product(
@@ -217,7 +217,7 @@ class VisuallySearchProductsVisualSearchModuleFrontController extends VisuallySe
                 }
             }
         } else {
-            require_once dirname(__DIR__) . '/../classes/Product.php';
+            require_once dirname(__FILE__) . '/../classes/Product.php';
 
             foreach ($productsIds as $productId) {
                 $product = (new VisuallySearchProducts\PrestaShop17\Product(

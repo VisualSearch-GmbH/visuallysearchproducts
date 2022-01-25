@@ -11,7 +11,7 @@
 require_once 'category.php';
 require_once dirname(__FILE__).'/../../classes/VisuallySearchProductsFrontController.php';
 
-class VisuallySearchProductsApiKeyVerifyModuleFrontController extends  VisuallySearchProductsFrontController
+class VisuallySearchProductsApiKeyVerifyModuleFrontController extends VisuallySearchProductsFrontController
 {
     public function init()
     {

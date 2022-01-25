@@ -206,6 +206,7 @@ class Product
                     // in what Product::getProductCustomization() returns
                     $key = $customizationField['id_customization_field'];
 
+                    $field = array();
                     $field['label'] = $customizationField['name'];
                     $field['id_customization_field'] = $customizationField['id_customization_field'];
                     $field['required'] = $customizationField['required'];
