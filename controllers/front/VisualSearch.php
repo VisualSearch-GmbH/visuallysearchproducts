@@ -203,7 +203,7 @@ class VisuallySearchProductsVisualSearchModuleFrontController extends VisuallySe
         $products = array();
 
         if (_VSP_PS16_) {
-            require_once dirname(__FILE__) . '/../classes/Product16.php';
+            require_once dirname(__FILE__) . '/../../classes/Product16.php';
 
             foreach ($productsIds as $productId) {
                 $product = (new VisuallySearchProducts\PrestaShop16\Product(
@@ -217,7 +217,7 @@ class VisuallySearchProductsVisualSearchModuleFrontController extends VisuallySe
                 }
             }
         } else {
-            require_once dirname(__FILE__) . '/../classes/Product.php';
+            require_once dirname(__FILE__) . '/../../classes/Product.php';
 
             foreach ($productsIds as $productId) {
                 $product = (new VisuallySearchProducts\PrestaShop17\Product(
