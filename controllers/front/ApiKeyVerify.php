@@ -32,9 +32,10 @@ class VisuallySearchProductsApiKeyVerifyModuleFrontController extends VisuallySe
             $handle = curl_init();
             $httpHeader = array(
                 'Vis-API-KEY: '.$apiKey,
+                'Vis-SOLUTION-TYPE: search',
             );
 
-            curl_setopt($handle, CURLOPT_URL, 'https://api.visualsearch.wien/api_key_verify_similar');
+            curl_setopt($handle, CURLOPT_URL, 'https://api.visualsearch.wien/api_key_verify');
             curl_setopt($handle, CURLOPT_CUSTOMREQUEST, 'POST');
             curl_setopt($handle, CURLOPT_HTTPHEADER, $httpHeader);
             curl_setopt($handle, CURLOPT_RETURNTRANSFER, 1);
