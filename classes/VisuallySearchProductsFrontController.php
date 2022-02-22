@@ -23,6 +23,30 @@ class VisuallySearchProductsFrontController extends ModuleFrontController
             }
         }
 
+        #
+        # Report error in authorization
+        #
+        $message = 'Bearer token: '.$this->getBearerToken().'; ';
+        $keys = Db::getInstance()->ExecuteS('SELECT * FROM ' . _DB_PREFIX_ . 'visually_search_products' . ' LIMIT 1');
+        foreach ($keys as $key => $token) {
+            $message = $message.'Database id_visually_search_products: '.$token['id_visually_search_products'].'; ';
+        }
+
+        $host = Context::getContext()->shop->getBaseURL(true);
+        $url = 'https://api.visualsearch.wien/error_message';
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Vis-API-KEY: marketing',
+            'Vis-SYSTEM-HOSTS:'.$host,
+            'Vis-SYSTEM-KEY:',
+            'Vis-SYSTEM-TYPE: visually_search_products;prestashop;error: '.$message,
+            'Content-Type: application/json'
+        ));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_exec($ch);
+        curl_close($ch);
+
         return false;
     }
 
