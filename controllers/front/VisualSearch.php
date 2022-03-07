@@ -161,9 +161,11 @@ class VisuallySearchProductsVisualSearchModuleFrontController extends VisuallySe
         if ($filename && file_exists($filename)) {
             $handle = curl_init();
 
+            $hosts = Context::getContext()->shop->getBaseURL(true);
+
             $httpHeaders = array(
                 'Vis-API-KEY: ' . $this->module->getApiKey(),
-                'Vis-SYSTEM-HOSTS: prestashop.visualsearch.at',
+                'Vis-SYSTEM-HOSTS:'.$hosts,
                 'Vis-SYSTEM-TYPE: prestashop',
                 'Content-Type: application/json',
             );
@@ -172,7 +174,7 @@ class VisuallySearchProductsVisualSearchModuleFrontController extends VisuallySe
                 'image_data' => base64_encode(Tools::file_get_contents($filename))
             ));
             
-            curl_setopt($handle, CURLOPT_URL, 'https://api.visualsearch.wien/search_single_demo');
+            curl_setopt($handle, CURLOPT_URL, 'https://api.visualsearch.wien/search_single');
             curl_setopt($handle, CURLOPT_CUSTOMREQUEST, 'POST');
             curl_setopt($handle, CURLOPT_HTTPHEADER, $httpHeaders);
             curl_setopt($handle, CURLOPT_POSTFIELDS, $postFields);
